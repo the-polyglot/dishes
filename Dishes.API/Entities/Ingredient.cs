@@ -15,7 +15,7 @@ public class Ingredient
     public ICollection<Dish> Dishes { get; set; } = new List<Dish>();
 
     public Ingredient()
-    {  }
+    { }
 
     [SetsRequiredMembers]
     public Ingredient(Guid id, string name)

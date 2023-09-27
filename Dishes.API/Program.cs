@@ -1,11 +1,5 @@
-using AutoMapper;
 using Dishes.API.DbContexts;
-using Dishes.API.Entities;
 using Dishes.API.Extensions;
-using Dishes.API.Models;
-using Microsoft.AspNetCore.Diagnostics;
-using Microsoft.AspNetCore.Http.HttpResults;
-using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 
 var builder = WebApplication.CreateBuilder(args);
@@ -18,6 +12,9 @@ builder.Services.AddDbContext<DishesDbContext>(options =>
 builder.Services.AddAutoMapper(AppDomain.CurrentDomain.GetAssemblies());
 
 builder.Services.AddProblemDetails();
+
+builder.Services.AddEndpointsApiExplorer();
+builder.Services.AddSwaggerGen();
 
 var app = builder.Build();
 
@@ -42,6 +39,13 @@ if (!app.Environment.IsDevelopment())
 }
 
 app.UseHttpsRedirection();
+
+app.UseSwagger();
+app.UseSwaggerUI(options =>
+{
+    options.SwaggerEndpoint("/swagger/v1/swagger.json", "Dishes.API v1");
+    options.RoutePrefix = string.Empty;
+});
 
 app.RegisterDishesEndpoints();
 app.RegisterIngredientsEndpoints();

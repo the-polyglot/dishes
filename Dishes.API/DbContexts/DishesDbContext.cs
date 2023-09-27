@@ -43,9 +43,9 @@ public class DishesDbContext : DbContext
 
         _ = modelBuilder.Entity<Dish>().HasData(
            new(Guid.Parse("eacc5169-b2a7-41ad-92c3-dbb1a5e7af06"),
-            "Flemish Beef stew with chicory" ),
+            "Flemish Beef stew with chicory"),
            new(Guid.Parse("fe462ec7-b30c-4987-8a8e-5f7dbd8e0cfa"),
-            "Mussels with french fries" ),
+            "Mussels with french fries"),
            new(Guid.Parse("b512d7cf-b331-4b54-8dae-d1228d128e8d"),
            "Ragu alla bolognaise"),
            new(Guid.Parse("fd630a57-2352-4731-b25c-db9cc7601b16"),
