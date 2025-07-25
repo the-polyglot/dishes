@@ -3,17 +3,12 @@ using Dishes.API.DbContexts;
 using Dishes.API.Entities;
 using Dishes.API.Models;
 using Microsoft.AspNetCore.Http.HttpResults;
-using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 
 namespace Dishes.API.EndpointHandlers;
 
 public static class DishesHandlers
 {
-    [Consumes("application/json")]
-    [Produces("application/json")]
-    [ProducesResponseType(StatusCodes.Status200OK)]
-    [ProducesDefaultResponseType]
     public static async Task<Ok<IEnumerable<DishDto>>> GetDishesAsync(
         DishesDbContext dishesDbContext,
         IMapper mapper,
@@ -25,11 +20,6 @@ public static class DishesHandlers
                 .ToListAsync()));
     }
 
-    [Consumes("application/json")]
-    [Produces("application/json")]
-    [ProducesResponseType(StatusCodes.Status200OK)]
-    [ProducesResponseType(StatusCodes.Status404NotFound)]
-    [ProducesDefaultResponseType]
     public static async Task<Results<NotFound, Ok<DishDto>>> GetDishByIdAsync(
         DishesDbContext dishesDbContext,
         IMapper mapper,
@@ -46,11 +36,6 @@ public static class DishesHandlers
         return TypedResults.Ok(mapper.Map<DishDto>(dish));
     }
 
-    [Consumes("application/json")]
-    [Produces("application/json")]
-    [ProducesResponseType(StatusCodes.Status200OK)]
-    [ProducesResponseType(StatusCodes.Status404NotFound)]
-    [ProducesDefaultResponseType]
     public static async Task<Results<NotFound, Ok<DishDto>>> GetDishByNameAsync(
         DishesDbContext dishesDbContext,
         IMapper mapper,
@@ -67,10 +52,6 @@ public static class DishesHandlers
         return TypedResults.Ok(mapper.Map<DishDto>(dish));
     }
 
-    [Consumes("application/json")]
-    [Produces("application/json")]
-    [ProducesResponseType(StatusCodes.Status201Created)]
-    [ProducesDefaultResponseType]
     public static async Task<CreatedAtRoute<DishDto>> CreateDishAsync(
         DishesDbContext dishesDbContext,
         IMapper mapper,
@@ -89,12 +70,6 @@ public static class DishesHandlers
             new { dishId = createdDish.Id });
     }
 
-
-    [Consumes("application/json")]
-    [Produces("application/json")]
-    [ProducesResponseType(StatusCodes.Status204NoContent)]
-    [ProducesResponseType(StatusCodes.Status404NotFound)]
-    [ProducesDefaultResponseType]
     public static async Task<Results<NoContent, NotFound>> UpdateDishAsync(
         DishesDbContext dishesDbContext,
         IMapper mapper,
@@ -116,11 +91,6 @@ public static class DishesHandlers
         return TypedResults.NoContent();
     }
 
-    [Consumes("application/json")]
-    [Produces("application/json")]
-    [ProducesResponseType(StatusCodes.Status204NoContent)]
-    [ProducesResponseType(StatusCodes.Status404NotFound)]
-    [ProducesDefaultResponseType]
     public static async Task<Results<NoContent, NotFound>> DeleteDishAsync(
         DishesDbContext dishesDbContext,
         Guid dishId)

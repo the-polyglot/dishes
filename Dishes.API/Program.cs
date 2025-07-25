@@ -23,19 +23,6 @@ var app = builder.Build();
 if (!app.Environment.IsDevelopment())
 {
     app.UseExceptionHandler();
-    // app.UseExceptionHandler(config =>
-    // {
-    //     config.Run(async context =>
-    //     {
-    //         context.Response.StatusCode = StatusCodes.Status500InternalServerError;
-    //         context.Response.ContentType = "application/json";
-    //         await context.Response.WriteAsJsonAsync(new ProblemDetails
-    //         {
-    //             Title = "An unexpected error occurred!",
-    //             Detail = context.Features.Get<IExceptionHandlerFeature>()?.Error.Message
-    //         });
-    //     });
-    // });
 }
 
 app.UseHttpsRedirection();
@@ -47,8 +34,7 @@ app.UseSwaggerUI(options =>
     options.RoutePrefix = string.Empty;
 });
 
-app.RegisterDishesEndpoints();
-app.RegisterIngredientsEndpoints();
+app.RegisterEndpoints();
 
 using (var serviceScope = app.Services.GetService<IServiceScopeFactory>().CreateScope())
 {

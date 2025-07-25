@@ -1,53 +1,98 @@
 using Dishes.API.EndpointHandlers;
+using Dishes.API.Models;
 
 namespace Dishes.API.Extensions;
 
 public static class EndpointRouteBuilderExtensions
 {
-    public static void RegisterDishesEndpoints(this IEndpointRouteBuilder endpointRouterBuilder)
+    private static IEndpointRouteBuilder RegisterDishesEndpoints(this IEndpointRouteBuilder builder)
     {
-        var dishesEndpoints = endpointRouterBuilder.MapGroup("/dishes")
+        var dishesGroup = builder.MapGroup("/dishes")
+            .WithTags("Dishes")
             .WithOpenApi();
 
-        var dishesWithIdEndpoints = dishesEndpoints.MapGroup("/{dishId:guid}")
+        var dishesWithIdGroup = dishesGroup.MapGroup("/{dishId:guid}")
+            .WithTags("Dishes")
             .WithOpenApi();
 
-        dishesEndpoints.MapGet("", DishesHandlers.GetDishesAsync)
+        dishesGroup.MapGet("", DishesHandlers.GetDishesAsync)
+            .WithName("GetDishes")
+            .Accepts<Guid>("application/json")
+            .Produces<IEnumerable<DishDto>>(StatusCodes.Status200OK)
+            .ProducesProblem(StatusCodes.Status500InternalServerError)
             .WithSummary("Get all dishes")
             .WithDescription("Returns all dishes from the database.");
 
-        dishesWithIdEndpoints.MapGet("", DishesHandlers.GetDishByIdAsync).WithName("GetDishById")
+        dishesWithIdGroup.MapGet("", DishesHandlers.GetDishByIdAsync)
+            .WithName("GetDishById")
+            .Accepts<Guid>("application/json")
+            .Produces<DishDto>(StatusCodes.Status200OK)
+            .Produces(StatusCodes.Status404NotFound)
+            .ProducesProblem(StatusCodes.Status500InternalServerError)
             .WithSummary("Get a dish by id")
             .WithDescription("Returns a dish from the database by its id.");
 
-        dishesEndpoints.MapGet("/{dishName}", DishesHandlers.GetDishByNameAsync)
+        dishesGroup.MapGet("/{dishName}", DishesHandlers.GetDishByNameAsync)
+            .WithName("GetDishByName")
+            .Accepts<Guid>("application/json")
+            .Produces<DishDto>(StatusCodes.Status200OK)
+            .Produces(StatusCodes.Status404NotFound)
+            .ProducesProblem(StatusCodes.Status500InternalServerError)
             .WithSummary("Get a dish by name")
             .WithDescription("Returns a dish from the database by its name.");
 
-        dishesEndpoints.MapPost("", DishesHandlers.CreateDishAsync)
+        dishesGroup.MapPost("", DishesHandlers.CreateDishAsync)
+            .WithName("CreateDish")
+            .Accepts<DishForCreationDto>("application/json")
+            .Produces<DishDto>(StatusCodes.Status201Created)
+            .ProducesProblem(StatusCodes.Status500InternalServerError)
             .WithSummary("Create a dish")
             .WithDescription("Creates a dish in the database.");
 
-        dishesWithIdEndpoints.MapPut("", DishesHandlers.UpdateDishAsync)
+        dishesWithIdGroup.MapPut("", DishesHandlers.UpdateDishAsync)
+            .WithName("UpdateDish")
+            .Accepts<DishForUpdateDto>("application/json")
+            .Produces(StatusCodes.Status204NoContent)
+            .Produces(StatusCodes.Status404NotFound)
+            .ProducesProblem(StatusCodes.Status500InternalServerError)
             .WithSummary("Update a dish")
             .WithDescription("Updates a dish in the database.");
 
-        dishesWithIdEndpoints.MapDelete("", DishesHandlers.DeleteDishAsync)
+        dishesWithIdGroup.MapDelete("", DishesHandlers.DeleteDishAsync)
+            .WithName("DeleteDish")
+            .Accepts<Guid>("application/json")
+            .Produces(StatusCodes.Status204NoContent)
+            .Produces(StatusCodes.Status404NotFound)
+            .ProducesProblem(StatusCodes.Status500InternalServerError)
             .WithSummary("Delete a dish")
             .WithDescription("Deletes a dish from the database.");
+
+        return builder;
     }
-    public static void RegisterIngredientsEndpoints(this IEndpointRouteBuilder endpointRouterBuilder)
+
+    private static IEndpointRouteBuilder RegisterIngredientsEndpoints(this IEndpointRouteBuilder builder)
     {
-        var ingredientsEndpoints = endpointRouterBuilder.MapGroup("dishes/{dishId:guid}/ingredients")
+        var ingredientsGroup = builder.MapGroup("dishes/{dishId:guid}/ingredients")
+            .WithTags("Ingredients")
             .WithOpenApi();
 
-        ingredientsEndpoints.MapGet("", IngredientsHandlers.GetIngredientsAsync)
+        ingredientsGroup.MapGet("", IngredientsHandlers.GetIngredientsAsync)
+            .WithName("GetIngredients")
+            .Accepts<Guid>("application/json")
+            .Produces(StatusCodes.Status404NotFound)
+            .Produces<IEnumerable<IngredientDto>>(StatusCodes.Status200OK)
+            .ProducesProblem(StatusCodes.Status500InternalServerError)
             .WithSummary("Get all ingredients")
             .WithDescription("Returns all ingredients from the database.");
 
-        ingredientsEndpoints.MapPost("", () =>
-        {
-            throw new NotImplementedException();
-        });
+        return builder;
+    }
+
+    public static IEndpointRouteBuilder RegisterEndpoints(this IEndpointRouteBuilder builder)
+    {
+        builder.RegisterDishesEndpoints();
+        builder.RegisterIngredientsEndpoints();
+
+        return builder;
     }
 }

@@ -1,20 +1,13 @@
 using AutoMapper;
 using Dishes.API.DbContexts;
-using Dishes.API.Entities;
 using Dishes.API.Models;
 using Microsoft.AspNetCore.Http.HttpResults;
-using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 
 namespace Dishes.API.EndpointHandlers;
 
 public static class IngredientsHandlers
 {
-    [Consumes("application/json")]
-    [Produces("application/json")]
-    [ProducesResponseType(StatusCodes.Status200OK)]
-    [ProducesResponseType(StatusCodes.Status404NotFound)]
-    [ProducesDefaultResponseType]
     public static async Task<Results<NotFound, Ok<IEnumerable<IngredientDto>>>> GetIngredientsAsync(
         DishesDbContext dishesDbContext,
         IMapper mapper,
