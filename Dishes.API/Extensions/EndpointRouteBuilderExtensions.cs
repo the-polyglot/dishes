@@ -5,7 +5,7 @@ namespace Dishes.API.Extensions;
 
 public static class EndpointRouteBuilderExtensions
 {
-    private static IEndpointRouteBuilder RegisterDishesEndpoints(this IEndpointRouteBuilder builder)
+    private static void RegisterDishesEndpoints(this IEndpointRouteBuilder builder)
     {
         var dishesGroup = builder.MapGroup("/dishes")
             .WithTags("Dishes")
@@ -66,11 +66,9 @@ public static class EndpointRouteBuilderExtensions
             .ProducesProblem(StatusCodes.Status500InternalServerError)
             .WithSummary("Delete a dish")
             .WithDescription("Deletes a dish from the database.");
-
-        return builder;
     }
 
-    private static IEndpointRouteBuilder RegisterIngredientsEndpoints(this IEndpointRouteBuilder builder)
+    private static void RegisterIngredientsEndpoints(this IEndpointRouteBuilder builder)
     {
         var ingredientsGroup = builder.MapGroup("dishes/{dishId:guid}/ingredients")
             .WithTags("Ingredients")
@@ -84,15 +82,11 @@ public static class EndpointRouteBuilderExtensions
             .ProducesProblem(StatusCodes.Status500InternalServerError)
             .WithSummary("Get all ingredients")
             .WithDescription("Returns all ingredients from the database.");
-
-        return builder;
     }
 
-    public static IEndpointRouteBuilder RegisterEndpoints(this IEndpointRouteBuilder builder)
+    public static void RegisterEndpoints(this IEndpointRouteBuilder builder)
     {
         builder.RegisterDishesEndpoints();
         builder.RegisterIngredientsEndpoints();
-
-        return builder;
     }
 }
