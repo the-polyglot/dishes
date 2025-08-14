@@ -12,7 +12,7 @@ public class Ingredient
     [MaxLength(200)]
     public required string Name { get; set; }
 
-    public ICollection<Dish> Dishes { get; set; } = new List<Dish>();
+    public ICollection<Dish> Dishes { get; set; } = [];
 
     public Ingredient()
     { }
